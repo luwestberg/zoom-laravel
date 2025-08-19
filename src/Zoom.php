@@ -116,10 +116,12 @@ class Zoom
     }
 
     // get all meetings
-    public function getAllMeeting($userId)
+    public function getAllMeeting($userId, $params = [])
     {
         try {
-            $response = $this->client->request('GET', 'users/'.$userId.'/meetings');
+            $response = $this->client->request('GET', 'users/'.$userId.'/meetings', [
+                'query' => $params, 
+            ]);
             $data = json_decode($response->getBody(), true);
             return [
                 'status' => true,
@@ -134,22 +136,11 @@ class Zoom
     }
 
     // get upcoming meetings
-    public function getUpcomingMeeting($userId)
+    public function getUpcomingMeeting($userId, $params = [])
     {
-        try {
-            $response = $this->client->request('GET', 'users/'.$userId.'/meetings?type=upcoming');
-
-            $data = json_decode($response->getBody(), true);
-            return [
-                'status' => true,
-                'data' => $data,
-            ];
-        } catch (\Throwable $th) {
-            return [
-                'status' => false,
-                'message' => $th->getMessage(),
-            ];
-        }
+        return $this->getAllMeeting($userId, array_merge($params, [
+            'type' => 'upcoming',
+        ]));
     }
 
     // get previous meetings
