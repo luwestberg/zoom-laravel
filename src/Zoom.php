@@ -36,6 +36,15 @@ class Zoom
         ]);
     }
 
+    /**
+     * Return the underlying Guzzle client.
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
     protected function getAccessToken()
     {
 
@@ -58,10 +67,10 @@ class Zoom
     }
 
     // create meeting
-    public function createMeeting(array $data)
+    public function createMeeting($userId, array $data)
     {
         try {
-            $response = $this->client->request('POST', 'users/me/meetings', [
+            $response = $this->client->request('POST', 'users/'.$userId.'/meetings', [
                 'json' => $data,
             ]);
             $res = json_decode($response->getBody(), true);
